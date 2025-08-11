@@ -32,10 +32,10 @@ rust-version = "1.73"
 all-features = true
 
 [dependencies]
-arrow = { version = "53.1.0", features = ["prettyprint", "chrono-tz"] }
+arrow = { version = "55.2.0", features = ["prettyprint", "chrono-tz"] }
 bytemuck = { version = "1.18.0", features = ["must_cast"] }
 bytes = "1.4"
-chrono = { version = ">= 0.4.37, < 0.4.40", default-features = false, features = ["std"] }
+chrono = { version = "0.4.40", default-features = false, features = ["std"] }
 chrono-tz = "0.10"
 fallible-streaming-iterator = { version = "0.1" }
 flate2 = "1"
@@ -105,3 +105,18 @@ required-features = ["cli"]
 [[bin]]
 name = "orc-stats"
 required-features = ["cli"]
+
+[patch.crates-io]
+# arrow: branch=v55.2.0-blaze
+arrow = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "97075c939"}
+arrow-arith = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "97075c939"}
+arrow-array = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "97075c939"}
+arrow-buffer = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "97075c939"}
+arrow-cast = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "97075c939"}
+arrow-data = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "97075c939"}
+arrow-ipc = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "97075c939"}
+arrow-ord = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "97075c939"}
+arrow-row = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "97075c939"}
+arrow-schema = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "97075c939"}
+arrow-select = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "97075c939"}
+arrow-string = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "97075c939"}
