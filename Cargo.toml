@@ -108,15 +108,15 @@ required-features = ["cli"]
 
 [patch.crates-io]
 # arrow: branch=v55.2.0-blaze
-arrow = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "5de02520c"}
-arrow-arith = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "5de02520c"}
-arrow-array = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "5de02520c"}
-arrow-buffer = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "5de02520c"}
-arrow-cast = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "5de02520c"}
-arrow-data = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "5de02520c"}
-arrow-ipc = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "5de02520c"}
-arrow-ord = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "5de02520c"}
-arrow-row = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "5de02520c"}
-arrow-schema = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "5de02520c"}
-arrow-select = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "5de02520c"}
-arrow-string = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "5de02520c"}
+arrow = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "de74376a4"}
+arrow-arith = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "de74376a4"}
+arrow-array = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "de74376a4"}
+arrow-buffer = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "de74376a4"}
+arrow-cast = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "de74376a4"}
+arrow-data = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "de74376a4"}
+arrow-ipc = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "de74376a4"}
+arrow-ord = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "de74376a4"}
+arrow-row = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "de74376a4"}
+arrow-schema = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "de74376a4"}
+arrow-select = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "de74376a4"}
+arrow-string = { git = "https://github.com/blaze-init/arrow-rs.git", rev = "de74376a4"}
