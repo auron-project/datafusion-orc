@@ -247,6 +247,11 @@ impl<T: ArrowTimestampType> ArrayBatchDecoder for TimestampOffsetArrayDecoder<T>
         let convert_timezone = |ts| {
             // Convert from writer timezone to reader timezone (which we default to UTC)
             // TODO: more efficient way of doing this?
+            if let Ok(tz_str) = iana_time_zone::get_timezone() {
+                if tz_str == self.writer_tz.to_string() {
+                    return Some(ts);
+                }
+            }
             self.writer_tz
                 .timestamp_nanos(ts)
                 .naive_local()
