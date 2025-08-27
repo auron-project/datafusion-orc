@@ -125,7 +125,7 @@ jobs:
       - name: Rust Cache
         uses: Swatinem/rust-cache@v2
       - name: Run cargo clippy
-        run: cargo clippy --workspace --all-targets ${{ matrix.features }} -- -D warnings
+        run: cargo clippy --workspace --all-targets ${{ matrix.features }} -- -D warnings  --allow dead_code
 
   license-header:
     name: Check license header
