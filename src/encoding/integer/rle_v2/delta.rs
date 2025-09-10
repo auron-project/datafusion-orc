@@ -286,4 +286,30 @@ mod tests {
         }
         assert_eq!(expected, out);
     }
+
+    #[test]
+    fn test_i32_add_sub_i64() {
+        let v = i32::MIN;
+        let i = (i32::MAX as i64) * 2;
+        let add_result = v.add_i64(i);
+        assert_eq!(add_result, Some(2147483646));
+
+        let v = i32::MIN;
+        let i = -(i32::MAX as i64) * 2;
+        let sub_result = v.sub_i64(i);
+        assert_eq!(sub_result, Some(2147483646));
+    }
+
+    #[test]
+    fn test_i16_add_sub_i64() {
+        let v = i16::MIN;
+        let i = (i16::MAX as i64) * 2;
+        let add_result = v.add_i64(i);
+        assert_eq!(add_result, Some(32766i16));
+
+        let v = i16::MIN;
+        let i = -(i16::MAX as i64) * 2;
+        let sub_result = v.sub_i64(i);
+        assert_eq!(sub_result, Some(32766i16));
+    }
 }
