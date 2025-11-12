@@ -170,6 +170,7 @@ enum RleV1EncodingState<N: NInt> {
     Run { value: N, delta: i8, length: usize },
 }
 
+#[allow(clippy::derivable_impls)]
 impl<N: NInt> Default for RleV1EncodingState<N> {
     fn default() -> Self {
         Self::Empty

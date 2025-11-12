@@ -430,9 +430,9 @@ impl DataType {
             DataType::Decimal {
                 precision, scale, ..
             } => ArrowDataType::Decimal128(*precision as u8, *scale as i8), // TODO: safety of cast?
-            DataType::Timestamp { .. } => ArrowDataType::Timestamp(TimeUnit::Nanosecond, None),
+            DataType::Timestamp { .. } => ArrowDataType::Timestamp(TimeUnit::Microsecond, None),
             DataType::TimestampWithLocalTimezone { .. } => {
-                ArrowDataType::Timestamp(TimeUnit::Nanosecond, Some("UTC".into()))
+                ArrowDataType::Timestamp(TimeUnit::Microsecond, Some("UTC".into()))
             }
             DataType::Date { .. } => ArrowDataType::Date32,
             DataType::Struct { children, .. } => {

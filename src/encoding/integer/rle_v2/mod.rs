@@ -217,6 +217,7 @@ enum RleV2EncodingState<N: NInt> {
     VariableRun { literals: Vec<N> },
 }
 
+#[allow(clippy::derivable_impls)]
 impl<N: NInt> Default for RleV2EncodingState<N> {
     fn default() -> Self {
         Self::Empty
