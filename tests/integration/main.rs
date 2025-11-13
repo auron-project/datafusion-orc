@@ -243,10 +243,10 @@ fn orc_split_elim() {
     test_expected_file("orc_split_elim");
 }
 
-// #[test]
-// fn orc_split_elim_cpp() {
-//     test_expected_file("orc_split_elim_cpp");
-// }
+#[test]
+fn orc_split_elim_cpp() {
+    test_expected_file("orc_split_elim_cpp");
+}
 
 #[test]
 fn orc_split_elim_new() {
