@@ -18,7 +18,6 @@
 from datetime import datetime as dttm
 import pyarrow as pa
 from pyarrow import orc
-from pyarrow import parquet
 import pyorc
 
 dir = "tests/basic/data"

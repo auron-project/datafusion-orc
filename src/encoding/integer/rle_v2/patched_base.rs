@@ -116,9 +116,9 @@ pub fn read_patched_base<N: NInt, R: Read, S: EncodingSign>(
             let patch_bits = N::from_i64(patch_bits);
             let patched_value = *value | patch_bits;
 
-            *value = patched_value.checked_add(&base).context(OutOfSpecSnafu {
-                msg: "over/underflow when decoding patched base integer",
-            })?;
+            // The specification does not mention wrapping, but this is consistent at least
+            // with the C++ reader and writer and the Java reader
+            *value = patched_value.wrapping_add(&base);
 
             patch_index += 1;
 

@@ -23,7 +23,8 @@ use std::{
     ops::{BitOrAssign, ShlAssign},
 };
 
-use num::{traits::CheckedShl, PrimInt, Signed};
+use num::traits::{CheckedShl, WrappingAdd};
+use num::{PrimInt, Signed};
 use rle_v1::RleV1Decoder;
 use rle_v2::RleV2Decoder;
 use snafu::ResultExt;
@@ -114,7 +115,7 @@ impl EncodingSign for UnsignedEncoding {
     }
 }
 
-pub trait VarintSerde: PrimInt + CheckedShl + BitOrAssign + Signed {
+pub trait VarintSerde: PrimInt + CheckedShl + BitOrAssign + Signed + WrappingAdd {
     const BYTE_SIZE: usize;
 
     /// Calculate the minimum bit size required to represent this value, by truncating

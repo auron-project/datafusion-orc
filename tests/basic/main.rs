@@ -615,6 +615,52 @@ pub fn decimal128_timestamps_test() {
     assert_batches_eq(&batch, &expected);
 }
 
+#[test]
+pub fn rlev2_test() {
+    let path = basic_path("pyorc_rlev2_patchedbase.orc");
+    let reader = new_arrow_reader_root(&path);
+    let batches = reader.collect::<Result<Vec<_>, _>>().unwrap();
+
+    let expected = [
+        "+--------+",
+        "| values |",
+        "+--------+",
+        "| -480   |",
+        "| -480   |",
+        "| -420   |",
+        "| -420   |",
+        "| -420   |",
+        "| -360   |",
+        "| -480   |",
+        "| -420   |",
+        "| -420   |",
+        "| -420   |",
+        "| -25080 |",
+        "| -480   |",
+        "| -420   |",
+        "| -420   |",
+        "| 31080  |",
+        "| 0      |",
+        "| 0      |",
+        "| -360   |",
+        "| 60     |",
+        "| 0      |",
+        "| 180    |",
+        "| 0      |",
+        "| -240   |",
+        "| -480   |",
+        "| 60     |",
+        "| -480   |",
+        "| -480   |",
+        "| -180   |",
+        "| -300   |",
+        "| 120    |",
+        "| 60     |",
+        "+--------+",
+    ];
+    assert_batches_eq(&batches, &expected);
+}
+
 fn integration_path(path: &str) -> String {
     let dir = env!("CARGO_MANIFEST_DIR");
     format!("{dir}/tests/integration/data/{path}")
