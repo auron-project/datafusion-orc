@@ -238,8 +238,9 @@ fn delta_encoding_check<N: NInt>(literals: &[N]) -> DeltaEncodingCheckResult<N> 
 }
 
 /// Runs are guaranteed to have length > 1.
-#[derive(Debug, Clone, Eq, PartialEq)]
+#[derive(Debug, Clone, Eq, PartialEq, Default)]
 enum RleV2EncodingState<N: NInt> {
+    #[default]
     /// When buffer is empty and no values to encode.
     Empty,
     /// Special state for first value as we determine after the first
@@ -249,12 +250,6 @@ enum RleV2EncodingState<N: NInt> {
     FixedRun { value: N, count: usize },
     /// Run of variable values.
     VariableRun { literals: Vec<N> },
-}
-
-impl<N: NInt> Default for RleV2EncodingState<N> {
-    fn default() -> Self {
-        Self::Empty
-    }
 }
 
 pub struct RleV2Encoder<N: NInt, S: EncodingSign> {
