@@ -78,7 +78,18 @@ fn get_timestamp_decoder<T: ArrowTimestampType + Send>(
 ) -> Box<dyn ArrayBatchDecoder> {
     let inner = get_inner_timestamp_decoder::<T>(column, stripe, seconds_since_unix_epoch);
     match stripe.writer_tz() {
-        Some(writer_tz) => Box::new(TimestampOffsetArrayDecoder { inner, writer_tz }),
+        Some(writer_tz) => {
+            let reader_tz_name =
+                iana_time_zone::get_timezone().unwrap_or_else(|_| "UTC".to_string());
+            let reader_tz = reader_tz_name.parse::<chrono_tz::Tz>().unwrap_or(UTC);
+            let has_same_tz_rules = writer_tz == reader_tz;
+            Box::new(TimestampOffsetArrayDecoder {
+                inner,
+                writer_tz,
+                reader_tz,
+                has_same_tz_rules,
+            })
+        }
         None => Box::new(inner),
     }
 }
@@ -236,6 +247,8 @@ pub fn new_timestamp_instant_decoder(
 struct TimestampOffsetArrayDecoder<T: ArrowTimestampType> {
     inner: PrimitiveArrayDecoder<T>,
     writer_tz: chrono_tz::Tz,
+    reader_tz: chrono_tz::Tz,
+    has_same_tz_rules: bool,
 }
 
 impl<T: ArrowTimestampType> ArrayBatchDecoder for TimestampOffsetArrayDecoder<T> {
@@ -251,6 +264,10 @@ impl<T: ArrowTimestampType> ArrayBatchDecoder for TimestampOffsetArrayDecoder<T>
         let convert_timezone = |ts| {
             // Convert from writer timezone to reader timezone (which we default to UTC)
             // TODO: more efficient way of doing this?
+            if self.has_same_tz_rules {
+                return Some(ts);
+            }
+
             let microseconds_in_timeunit = match T::UNIT {
                 TimeUnit::Second => 1_000_000,
                 TimeUnit::Millisecond => 1_000,
@@ -263,15 +280,23 @@ impl<T: ArrowTimestampType> ArrayBatchDecoder for TimestampOffsetArrayDecoder<T>
                     .writer_tz
                     .timestamp_micros(ts * microseconds_in_timeunit)
                     .single()
-                    .map(|dt| {
-                        dt.naive_local().and_utc().timestamp_micros() / microseconds_in_timeunit
+                    .and_then(|dt| {
+                        dt.naive_local()
+                            .and_local_timezone(self.reader_tz)
+                            .single()
+                            .map(|dt_in_reader_tz| {
+                                dt_in_reader_tz.timestamp_micros() / microseconds_in_timeunit
+                            })
                     }),
                 TimeUnit::Nanosecond => self
                     .writer_tz
                     .timestamp_nanos(ts)
                     .naive_local()
                     .and_utc()
-                    .timestamp_nanos_opt(),
+                    .naive_local()
+                    .and_local_timezone(self.reader_tz)
+                    .single()
+                    .and_then(|dt_in_reader_tz| dt_in_reader_tz.timestamp_nanos_opt()),
             }
         };
         let array = array
