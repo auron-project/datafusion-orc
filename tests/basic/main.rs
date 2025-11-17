@@ -19,6 +19,7 @@ use std::fs::File;
 use std::ops::Range;
 use std::sync::Arc;
 
+use crate::misc::{LONG_BOOL_EXPECTED, LONG_STRING_DICT_EXPECTED, LONG_STRING_EXPECTED};
 use arrow::datatypes::{DataType, Decimal128Type, DecimalType, Field, Schema, TimeUnit};
 use arrow::record_batch::{RecordBatch, RecordBatchReader};
 use arrow::util::pretty;
@@ -28,8 +29,7 @@ use orc_rust::arrow_reader::{ArrowReader, ArrowReaderBuilder};
 #[cfg(feature = "async")]
 use orc_rust::async_arrow_reader::ArrowStreamReader;
 use orc_rust::projection::ProjectionMask;
-
-use crate::misc::{LONG_BOOL_EXPECTED, LONG_STRING_DICT_EXPECTED, LONG_STRING_EXPECTED};
+use orc_rust::TimestampPrecision;
 
 mod misc;
 
@@ -615,6 +615,52 @@ pub fn decimal128_timestamps_test() {
     assert_batches_eq(&batch, &expected);
 }
 
+#[test]
+pub fn rlev2_test() {
+    let path = basic_path("pyorc_rlev2_patchedbase.orc");
+    let reader = new_arrow_reader_root(&path);
+    let batches = reader.collect::<Result<Vec<_>, _>>().unwrap();
+
+    let expected = [
+        "+--------+",
+        "| values |",
+        "+--------+",
+        "| -480   |",
+        "| -480   |",
+        "| -420   |",
+        "| -420   |",
+        "| -420   |",
+        "| -360   |",
+        "| -480   |",
+        "| -420   |",
+        "| -420   |",
+        "| -420   |",
+        "| -25080 |",
+        "| -480   |",
+        "| -420   |",
+        "| -420   |",
+        "| 31080  |",
+        "| 0      |",
+        "| 0      |",
+        "| -360   |",
+        "| 60     |",
+        "| 0      |",
+        "| 180    |",
+        "| 0      |",
+        "| -240   |",
+        "| -480   |",
+        "| 60     |",
+        "| -480   |",
+        "| -480   |",
+        "| -180   |",
+        "| -300   |",
+        "| 120    |",
+        "| 60     |",
+        "+--------+",
+    ];
+    assert_batches_eq(&batches, &expected);
+}
+
 fn integration_path(path: &str) -> String {
     let dir = env!("CARGO_MANIFEST_DIR");
     format!("{dir}/tests/integration/data/{path}")
@@ -651,6 +697,55 @@ pub fn decimal128_timestamps_1900_test() {
         "| -2198229903.899100000 | 1900-12-25 |",
         "| -2198229903.899000000 | 1900-12-25 |",
         "+-----------------------+------------+",
+    ];
+    assert_batches_eq(&[batch], &expected);
+}
+
+#[test]
+pub fn timestamps_0001_test() {
+    let path = integration_path("timestamps_0001.orc");
+    let f = File::open(path).expect("no file found");
+    let mut reader = ArrowReaderBuilder::try_new(f)
+        .unwrap()
+        .with_schema(Arc::new(Schema::new(vec![Field::new(
+            "c1",
+            DataType::Timestamp(TimeUnit::Microsecond, None),
+            true,
+        )])))
+        .build();
+    let batch = reader.next().unwrap().unwrap();
+
+    let expected = [
+        "+---------------------+",
+        "| c1                  |",
+        "+---------------------+",
+        "| 0000-12-30T00:00:00 |",
+        "+---------------------+",
+    ];
+    assert_batches_eq(&[batch], &expected);
+}
+
+#[test]
+pub fn timestamps_0001_projection_test() {
+    let path = integration_path("timestamps_0001.orc");
+    let f = File::open(path).expect("no file found");
+
+    let builder = ArrowReaderBuilder::try_new(f).unwrap();
+    let projection = ProjectionMask::named_roots(builder.file_metadata().root_data_type(), &["c1"]);
+
+    let mut reader = builder
+        .with_projection(projection)
+        .with_timestamp_precision(TimestampPrecision::Microsecond)
+        .build();
+
+    let batch = reader.next().unwrap().unwrap();
+
+    let expected = [
+        "+---------------------+",
+        "| c1                  |",
+        "+---------------------+",
+        "| 0000-12-30T00:00:00 |",
+        "+---------------------+",
     ];
     assert_batches_eq(&[batch], &expected);
 }

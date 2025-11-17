@@ -234,17 +234,16 @@ impl<N: NInt, R: Read, S: EncodingSign> GenericRle<N> for RleV1Decoder<N, R, S> 
 /// 1. `Empty`: The buffer is empty and there are no values to encode.
 /// 2. `Literal`: The encoder is in literal mode, with values saved in buffer.
 /// 3. `Run`: The encoder is in run mode, with a run value, delta, and length.
-#[derive(Debug, Clone, Eq, PartialEq)]
+#[derive(Debug, Clone, Eq, PartialEq, Default)]
 enum RleV1EncodingState<N: NInt> {
+    #[default]
     Empty,
     Literal,
-    Run { value: N, delta: i8, length: usize },
-}
-
-impl<N: NInt> Default for RleV1EncodingState<N> {
-    fn default() -> Self {
-        Self::Empty
-    }
+    Run {
+        value: N,
+        delta: i8,
+        length: usize,
+    },
 }
 
 /// `RleV1Encoder` is responsible for encoding a stream of integers using the Run Length Encoding (RLE) version 1 format.
