@@ -32,7 +32,7 @@ rust-version = "1.73"
 all-features = true
 
 [dependencies]
-arrow = { version = "57.0", features = ["prettyprint", "chrono-tz", "ipc_compression"] }
+arrow = { version = "55.2.0", features = ["prettyprint", "chrono-tz", "ipc_compression"] }
 bytemuck = { version = "1.22.0", features = ["must_cast"] }
 bytes = "1.10.1"
 chrono = { version = "0.4.41", default-features = false, features = ["std"] }
@@ -105,3 +105,18 @@ required-features = ["cli"]
 [[bin]]
 name = "orc-stats"
 required-features = ["cli"]
+
+[patch.crates-io]
+# arrow: branch=v55.2.0-blaze
+arrow = { git = "https://github.com/auron-project/arrow-rs.git", rev = "5de02520c" }
+arrow-arith = { git = "https://github.com/auron-project/arrow-rs.git", rev = "5de02520c" }
+arrow-array = { git = "https://github.com/auron-project/arrow-rs.git", rev = "5de02520c" }
+arrow-buffer = { git = "https://github.com/auron-project/arrow-rs.git", rev = "5de02520c" }
+arrow-cast = { git = "https://github.com/auron-project/arrow-rs.git", rev = "5de02520c" }
+arrow-data = { git = "https://github.com/auron-project/arrow-rs.git", rev = "5de02520c" }
+arrow-ipc = { git = "https://github.com/auron-project/arrow-rs.git", rev = "5de02520c" }
+arrow-ord = { git = "https://github.com/auron-project/arrow-rs.git", rev = "5de02520c" }
+arrow-row = { git = "https://github.com/auron-project/arrow-rs.git", rev = "5de02520c" }
+arrow-schema = { git = "https://github.com/auron-project/arrow-rs.git", rev = "5de02520c" }
+arrow-select = { git = "https://github.com/auron-project/arrow-rs.git", rev = "5de02520c" }
+arrow-string = { git = "https://github.com/auron-project/arrow-rs.git", rev = "5de02520c" }
