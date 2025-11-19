@@ -65,6 +65,7 @@ anyhow = { version = "1.0", optional = true }
 clap = { version = "4.5.4", features = ["derive"], optional = true }
 
 # opendal
+iana-time-zone = "0.1.64"
 opendal = { version = "0.53", optional = true, default-features = false }
 
 [dev-dependencies]
