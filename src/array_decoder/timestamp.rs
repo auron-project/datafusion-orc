@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+use std::env;
 use std::sync::Arc;
 
 use crate::{
@@ -79,8 +80,9 @@ fn get_timestamp_decoder<T: ArrowTimestampType + Send>(
     let inner = get_inner_timestamp_decoder::<T>(column, stripe, seconds_since_unix_epoch);
     match stripe.writer_tz() {
         Some(writer_tz) => {
-            let reader_tz_name =
-                iana_time_zone::get_timezone().unwrap_or_else(|_| "UTC".to_string());
+            let reader_tz_name = env::var("ORC_READER_TIMEZONE").unwrap_or_else(|_e| {
+                iana_time_zone::get_timezone().unwrap_or_else(|_| "UTC".to_string())
+            });
             let reader_tz = reader_tz_name.parse::<chrono_tz::Tz>().unwrap_or(UTC);
             let has_same_tz_rules = writer_tz == reader_tz;
             Box::new(TimestampOffsetArrayDecoder {
