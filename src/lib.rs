@@ -51,16 +51,20 @@ pub mod arrow_reader;
 pub mod arrow_writer;
 #[cfg(feature = "async")]
 pub mod async_arrow_reader;
+mod bloom_filter;
 mod column;
 pub mod compression;
 #[allow(dead_code)]
 mod encoding;
 pub mod error;
 mod memory;
+pub mod predicate;
 pub mod projection;
 #[allow(dead_code)]
 mod proto;
 pub mod reader;
+pub mod row_group_filter;
+pub mod row_index;
 pub mod row_selection;
 pub mod schema;
 pub mod statistics;
@@ -71,5 +75,6 @@ pub use arrow_reader::{ArrowReader, ArrowReaderBuilder};
 pub use arrow_writer::{ArrowWriter, ArrowWriterBuilder};
 #[cfg(feature = "async")]
 pub use async_arrow_reader::ArrowStreamReader;
+pub use predicate::{ComparisonOp, Predicate, PredicateValue};
 pub use row_selection::{RowSelection, RowSelector};
 pub use schema::{ArrowSchemaOptions, TimestampPrecision};
